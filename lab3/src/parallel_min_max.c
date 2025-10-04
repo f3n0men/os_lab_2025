@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
   int *array = malloc(sizeof(int) * array_size);
   GenerateArray(array, array_size, seed);
   
-  // Создаем pipes для всех процессов (если используется pipe)
+  // Создаем pipes для всех процессов
   int pipes[2 * pnum];
   if (!with_files) {
     for (int i = 0; i < pnum; i++) {
@@ -117,7 +117,6 @@ int main(int argc, char **argv) {
   for (int i = 0; i < pnum; i++) {
     pid_t child_pid = fork();
     if (child_pid >= 0) {
-      // successful fork
       active_child_processes += 1;
       if (child_pid == 0) {
         // child process
@@ -159,7 +158,6 @@ int main(int argc, char **argv) {
     }
   }
 
-  // Родительский процесс закрывает ненужные концы pipe
   if (!with_files) {
     for (int i = 0; i < pnum; i++) {
       close(pipes[i * 2 + 1]); // закрываем запись в родительском процессе
